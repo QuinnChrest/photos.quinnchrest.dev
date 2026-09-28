@@ -1,31 +1,35 @@
 # photos.quinnchrest.dev
 A website to show off photos that I've taken.
 
-React + Vite, built with Bun and deployed to GitHub Pages. Images are hosted on Cloudflare R2 at `img.quinnchrest.dev`.
+React + Vite, built with Bun and deployed to GitHub Pages. Photos are served from the site itself (`public/img/`).
 
 ## Adding photos
 
-1. Drop full-size originals (jpg/png/tif/webp/heic) into `originals/`. This folder is gitignored.
-2. Run `bun run publish-photos`. It runs:
-   - `bun run process`: resizes each photo to 640/1280/2048px in AVIF, WebP and JPEG (in `.cache/out/`), reads the EXIF data (GPS is left out), makes a blur placeholder, and updates `src/data/photos.json`.
-   - `bun run upload`: uploads any new variants to R2.
+1. Drop full-size originals (jpg/png/tif/webp/heic) into `originals/`. This folder is gitignored, so originals never go into git.
+2. Run `bun run process`. For each photo it:
+   - makes 640/1280/2048px copies in AVIF, WebP and JPEG under `public/img/<id>/`
+   - reads the EXIF data, leaving out GPS
+   - makes a blur placeholder
+   - updates `src/data/photos.json`
+
+   Photos that haven't changed are skipped. Copies for photos you removed from `originals/` are deleted.
 3. Optionally add `title`, `caption` and `tags` in `src/data/photos.json`. They are kept when you run `process` again.
-4. Commit `src/data/photos.json` and push. GitHub Actions rebuilds the site.
+4. Preview with `bun run dev`.
+5. Commit `public/img/` and `src/data/photos.json`, then push. GitHub Actions rebuilds the site.
 
-Neither script is part of the site. They only run on your machine.
+The script only runs on your machine and isn't part of the site.
 
-`bun run dev` serves `.cache/out` at `/_img`, so you can preview photos before uploading them.
+### Keeping the repo small
+
+Git keeps every committed image forever, even after you delete it. To keep the repo small:
+
+- Avoid re-exporting the same photo many times.
+- Avoid changing `WIDTHS` in `src/data/types.ts` or the quality settings in `scripts/process.ts` unless you mean it. Either change regenerates every photo.
+
+GitHub Pages sites have a 1 GB limit, which is roughly 1,000+ photos at these sizes.
 
 ## One-time setup
 
-**Cloudflare R2**
-1. Create an R2 bucket (for example `photos`).
-2. Go to the bucket's Settings, then Custom Domains, and connect `img.quinnchrest.dev`.
-3. Go to R2, then Manage API tokens, and create a token with **Object Read & Write** access to that bucket only.
-4. Copy `.env.example` to `.env` and fill in the account ID, the key pair and the bucket name.
-5. Optional: add a Cache Rule for `img.quinnchrest.dev` that sets Browser TTL to 1 year. Filenames include a content hash, so a URL never changes content.
-
-**GitHub Pages**
-1. In the repo's Settings, open Pages and set Source to **GitHub Actions**.
-2. At your DNS provider, add a CNAME record `photos` pointing to `quinnchrest.github.io`.
+1. In the repo's Settings, open Pages and set Source to **GitHub Actions**. On the same page, set Custom domain to `photos.quinnchrest.dev`.
+2. At Porkbun, add a CNAME record `photos` pointing to `quinnchrest.github.io`.
 3. Once the certificate is issued, enable **Enforce HTTPS**.

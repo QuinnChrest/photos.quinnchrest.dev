@@ -22,9 +22,6 @@ jobs:
       - uses: oven-sh/setup-bun@v2
       - run: bun install --frozen-lockfile
       - run: bun run build
-        env:
-          # Optional override; defaults to https://img.quinnchrest.dev (see src/lib/images.ts).
-          VITE_IMG_BASE: ${{ vars.VITE_IMG_BASE }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

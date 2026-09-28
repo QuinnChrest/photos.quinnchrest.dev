@@ -5,14 +5,12 @@ node_modules/
 dist/
 *.tsbuildinfo
 
-# Photo pipeline (originals stay local; variants live in R2)
+# Photo originals stay local; web variants in public/img are committed
 originals/
-.cache/
 
 # Secrets
 .env
 .env.*
-!.env.example
 
 # Logs
 *.log
