@@ -1,7 +1,7 @@
 // Turns full-size originals into web-sized variants and updates the manifest
 // the site reads. Runs locally only; never bundled into the site.
 //
-//   originals/<name>.jpg  ->  .cache/out/<id>/<width>.{avif,webp,jpg}
+//   originals/<name>.jpg  ->  public/img/<id>/<width>.{avif,webp,jpg}  (committed, served by Pages)
 //                         ->  src/data/photos.json
 
 import { mkdir, readdir, rm } from "node:fs/promises";
@@ -12,7 +12,7 @@ import { rgbaToThumbHash } from "thumbhash";
 import { FORMATS, WIDTHS, type Exif, type Photo } from "../src/data/types";
 
 const ORIGINALS_DIR = "originals";
-const OUT_DIR = ".cache/out";
+const OUT_DIR = "public/img";
 const MANIFEST = "src/data/photos.json";
 const INPUT_EXTS = new Set([".jpg", ".jpeg", ".png", ".tif", ".tiff", ".webp", ".heic"]);
 

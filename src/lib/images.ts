@@ -1,10 +1,8 @@
 import { thumbHashToDataURL } from "thumbhash";
 import type { Photo } from "../data/types";
 
-// In dev, vite.config.ts serves .cache/out at /_img so photos work before anything is uploaded.
-const IMG_BASE = (
-  import.meta.env.VITE_IMG_BASE || (import.meta.env.DEV ? "/_img" : "https://img.quinnchrest.dev")
-).replace(/\/$/, "");
+// Variants live in public/img, which Vite serves in dev and copies into the build.
+const IMG_BASE = `${import.meta.env.BASE_URL}img`;
 
 export function imageUrl(photo: Photo, width: number, format: "avif" | "webp" | "jpg") {
   return `${IMG_BASE}/${photo.id}/${width}.${format}`;

@@ -8,9 +8,7 @@
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "lint": "oxlint",
-    "process": "bun run scripts/process.ts",
-    "upload": "bun run scripts/upload.ts",
-    "publish-photos": "bun run process && bun run upload"
+    "process": "bun run scripts/process.ts"
   },
   "dependencies": {
     "react": "^19.3.0",

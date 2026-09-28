@@ -14,7 +14,7 @@ export type Exif = {
 };
 
 export type Photo = {
-  /** Folder name in the bucket: slug of the filename + content hash. */
+  /** Folder name under public/img: slug of the filename + content hash. */
   id: string;
   /** Original filename in originals/, used to carry hand-written fields across re-exports. */
   source: string;
